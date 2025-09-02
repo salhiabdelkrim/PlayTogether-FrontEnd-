@@ -10,5 +10,5 @@ data class Sport(
     @SerializedName("name") val name: String,
     @SerializedName("description") val description: String,
     @SerializedName("numberOfPlayers") val numberOfPlayers: Int,
-    val imageName: String
+    @SerializedName("imageName") val imageName: String
 )

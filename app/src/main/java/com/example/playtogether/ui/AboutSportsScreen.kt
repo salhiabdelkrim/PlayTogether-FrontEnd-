@@ -1,5 +1,6 @@
 package com.example.playtogether.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.playtogether.R
 import com.example.playtogether.model.Sport
 import com.example.playtogether.ui.components.AppScaffold
 import com.example.playtogether.viewmodel.MemberViewModel
@@ -47,12 +49,22 @@ fun AboutSportsScreen(
     }
 }
 
+@SuppressLint("DiscouragedApi")
 @Composable
 fun SportCard(sport: Sport) {
     val context = LocalContext.current
+
+    // Récupérer l'image
     val imageResId = context.resources.getIdentifier(
         sport.imageName, "drawable", context.packageName
     )
+
+    // Si introuvable, on utilise une image par défaut
+    val painter = if (imageResId != 0) {
+        painterResource(id = imageResId)
+    } else {
+        painterResource(id = R.drawable.soccer) // mets une icône dans drawable
+    }
 
     Card(
         elevation = CardDefaults.cardElevation(8.dp),
@@ -60,7 +72,7 @@ fun SportCard(sport: Sport) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Image(
-                painter = painterResource(id = imageResId), // <- utilise l'ID généré
+                painter = painter,
                 contentDescription = sport.name,
                 modifier = Modifier
                     .fillMaxWidth()

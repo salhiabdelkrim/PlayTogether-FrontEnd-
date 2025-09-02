@@ -10,11 +10,14 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.*
 import com.example.playtogether.model.*
+import com.example.playtogether.repository.RetrofitInstance
+import com.example.playtogether.repository.SportRepository
 import com.example.playtogether.ui.*
 import com.example.playtogether.ui.components.AppScaffold
 import com.example.playtogether.ui.theme.PlayTogether
 import com.example.playtogether.viewmodel.MemberViewModel
 import com.example.playtogether.viewmodel.SportViewModel
+import com.example.playtogether.viewmodel.SportViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
@@ -121,7 +124,12 @@ class MainActivity : ComponentActivity() {
                         composable("aboutSports/{username}") { backStackEntry ->
                             val username = backStackEntry.arguments?.getString("username") ?: ""
                             val memberViewModel: MemberViewModel = viewModel()
-                            val sportViewModel: SportViewModel = viewModel() // <-- ajoute le SportViewModel
+                            val api = RetrofitInstance.sportApi
+                            val repository = SportRepository(api) // tu crées ou récupères ton repo
+                            val sportViewModel: SportViewModel = viewModel(
+                                factory = SportViewModelFactory(repository)
+                            )
+
                             val member by memberViewModel.member.collectAsState()
 
                             LaunchedEffect(username) {
