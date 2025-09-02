@@ -23,13 +23,13 @@ fun RegisterScreen(navController: NavHostController) {
     var username by remember { mutableStateOf("") }
     var nomComplet by remember { mutableStateOf("") }
     var dateNaissance by remember { mutableStateOf("") }
-    var sexe by remember { mutableStateOf("Homme") } // valeur par défaut
+    var sexe by remember { mutableStateOf("") } // valeur par défaut
     var ville by remember { mutableStateOf("") }
     var motDePasse by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    val optionsSexe = listOf("Homme", "Femme", "Autre")
+    val optionsSexe = listOf("Homme", "Femme")
 
     Column(
         modifier = Modifier
@@ -93,6 +93,12 @@ fun RegisterScreen(navController: NavHostController) {
 
         Button(onClick = {
             coroutineScope.launch {
+                // Vérification des champs obligatoires
+                if (username.isEmpty() || nomComplet.isEmpty() || dateNaissance.isEmpty() || sexe.isEmpty() || ville.isEmpty() || motDePasse.isEmpty()) {
+                    errorMessage = "Veuillez remplir tous les champs"
+                    return@launch
+                }
+
                 // Vérification stricte du format YYYY-MM-DD
                 val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 val isDateValid = try {
